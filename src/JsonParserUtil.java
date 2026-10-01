@@ -7,14 +7,30 @@ public class JsonParserUtil {
 
     public static List<String> splitEVENTS(String jsonArray){
         List<String> eventList = new ArrayList<>();
-        if(jsonArray.startsWith("[")) jsonArray = jsonArray.substring(1);
-        if (jsonArray.endsWith("]")) jsonArray = jsonArray.substring(0, jsonArray.length() -1);
+        int depth = 0;  // how many {} we are inside
+        int start = -1; // index where the current event began
+        boolean inString = false;
 
-        String[] events = jsonArray.split("(?=\\{\\s*\"id\":)");
+        for (int i = 0; i < jsonArray.length(); i++){
+            char c = jsonArray.charAt(i);
 
-        for(String e : events){
-            if(!e.isBlank()){
-                eventList.add(e);
+            if (inString){
+                if ( c == '\\') i++;                    //skip escaped char, e.g \"
+                else if (c == '\\') inString = false;   // String ended
+                continue;                               // ignore everything inside strings
+            }
+
+            if (c == '"') {
+                inString = true;
+            } else if (c == '{'){
+                if (depth == 0) start = i;      // a new top-level event start
+                depth++;
+            } else if (c == '}'){
+                depth--;
+                if (depth == 0 && start != -1){
+                    eventList.add(jsonArray.substring(start, i + 1));
+                    start = -1;
+                }
             }
         }
 
