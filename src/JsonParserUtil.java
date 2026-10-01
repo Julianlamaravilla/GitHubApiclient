@@ -16,7 +16,7 @@ public class JsonParserUtil {
 
             if (inString){
                 if ( c == '\\') i++;                    //skip escaped char, e.g \"
-                else if (c == '\\') inString = false;   // String ended
+                else if (c == '"') inString = false;   // String ended
                 continue;                               // ignore everything inside strings
             }
 
