@@ -1,3 +1,5 @@
+// Main class that connects the client, parser, and models.
+
 import java.util.List;
 
 
