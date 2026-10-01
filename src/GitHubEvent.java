@@ -22,13 +22,13 @@ public class GitHubEvent {
         return switch (type){
             case "PushEvent" -> {
                 int count = JsonParserUtil.countCommits(rawJson);
-                yield String.format("- Pushed %d commits%s to %s", count, count == 1 ? "" : "s" , repoName);
+                yield String.format("- Pushed %d commit%s to %s", count, count == 1 ? "" : "s" , repoName);
 
             }
 
-            case "IssuesEventn" -> {
+            case "IssuesEvent" -> {
                 String action = JsonParserUtil.extractJsonValue(rawJson, "action");
-                yield String.format("- %s an isse in %s", capitalize(action != null ? action : "updated"), repoName);
+                yield String.format("- %s an issue in %s", capitalize(action != null ? action : "updated"), repoName);
 
             }
 
@@ -39,8 +39,8 @@ public class GitHubEvent {
             }
 
             case "ForkEvent" -> "- Forked " + repoName;
-            case "IssueCommnetEvent" -> "- Commented on an issue in " + repoName;
-            case "PullRequestevent" -> {
+            case "IssueCommentEvent" -> "- Commented on an issue in " + repoName;
+            case "PullRequestEvent" -> {
                 String action = JsonParserUtil.extractJsonValue(rawJson, "action");
                 yield String.format("- %s a pull request in %s", capitalize(action != null ? action : "updated"), repoName);
             }
